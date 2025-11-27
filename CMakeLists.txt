@@ -20,8 +20,8 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME} 
     src/main.c
     src/write.c
-    src/initialize.c
     src/values.c
+    src/lcd.c
 )
 
 # Create map/bin/hex/uf2 files
