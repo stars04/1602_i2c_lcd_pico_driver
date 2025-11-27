@@ -3,73 +3,44 @@
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 #include "pico/binary_info.h"
+#include "lcd.h"
+/*
+ * This File is for testing the driver as it is built 
+ * (along with testing for the direct use case I have in mind
+ */
 
-const int LCD_ADDR = 0x27;
+void print_field_data(char* str2, int mag_size) {
+  char str1[] = "B Field: ";
+  //char *str2 = input;
+  int size = (sizeof(str1) + mag_size -2);
+  int index_tracker = 0;
+  char str_new[size];
 
-const uint8_t LCD_ENABLE_PIN = 0x04;
-const uint8_t LCD_BACKLIGHT = 0x08;
-const uint8_t LCD_CLEAR = 0x01;
-const uint8_t LCD_RETURN = 0x02;
-const uint8_t LCD_ENTRY = 0x06;
-const uint8_t LCD_DISPLAY_CONTROL = 0x0F;
-const uint8_t LCD_FUNCTION_SET = 0x28;
-
-// DDRAM ADDRESS
-const uint8_t RETURN_HOME = 0x80;
-const uint8_t LINE_2_HOME = 0xC0;
-
-// 'Modes'
-const uint8_t WRITE_CHAR = 0x01;
-const uint8_t READ_CHAR = 0x03;
-const uint8_t NO_REG_RW = 0x00;
-
-void i2c_write_byte(uint8_t byte) {
-#ifdef i2c_default
-  i2c_write_blocking(i2c_default, LCD_ADDR, &byte, 1, false);
-#endif
-}
-
-void write_4bits(uint8_t byte, uint8_t mode) {
-  uint8_t high_bits = mode | (byte & 0xF0) | LCD_BACKLIGHT;
-  uint8_t low_bits = mode | ((byte << 4) & 0xF0) | LCD_BACKLIGHT;
-
-  i2c_write_byte(high_bits);
-
-  sleep_ms(1);
-  i2c_write_byte(high_bits | LCD_ENABLE_PIN);
-  sleep_ms(1);
-  i2c_write_byte(high_bits & ~LCD_ENABLE_PIN);
-  sleep_ms(1);
-
-  i2c_write_byte(low_bits);
-
-  sleep_ms(1);
-  i2c_write_byte(low_bits | LCD_ENABLE_PIN);
-  sleep_ms(1);
-  i2c_write_byte(low_bits & ~LCD_ENABLE_PIN);
-  sleep_ms(1);
-}
-
-// initialization of LCD instructions from HD44780U Documentation
-
-void lcd_initialization() {
-  // Prescribed instruction 
-  sleep_ms(15);
-  write_4bits(0x03, NO_REG_RW);
-  sleep_ms(10);
-  write_4bits(0x03, NO_REG_RW);
-  sleep_ms(10);
-  write_4bits(0x03, NO_REG_RW);
-  write_4bits(0x02, NO_REG_RW);
-  // Chosen Configuration
-  write_4bits(LCD_FUNCTION_SET, NO_REG_RW);
-  write_4bits(0x08, NO_REG_RW);
-  write_4bits(0x01, NO_REG_RW);
-  write_4bits(LCD_ENTRY, NO_REG_RW);
-  // Clearing and Reseting Display as part of configuration
-  write_4bits(LCD_CLEAR, NO_REG_RW);
-  write_4bits(LCD_DISPLAY_CONTROL, NO_REG_RW);
-
+  for (int strings = 0; strings < 2; strings++) {
+    for (int index = 0; index < 100; index++) {
+      if (strings == 0) {
+        if (str1[index] != '\0') {
+          str_new[index_tracker] = str1[index];
+          index_tracker += 1;
+        } else {
+          break;
+        }
+      } else if (strings == 1) {
+        if (str2[index] != '\0') {
+          str_new[index_tracker] = str2[index];
+          index_tracker += 1;
+          //if (index_tracker == size) {break;}
+        } else if (str2[index] == '\0') {
+          str_new[index_tracker] = str2[index];
+          break;
+        }
+      }
+    }
+  }
+  lcd_clear();
+  lcd_print(str_new);
+  lcd_print("\nSenor ONLINE");
+  sleep_ms(500);
 }
 
 int main(void) {
@@ -87,20 +58,17 @@ int main(void) {
 
   lcd_initialization();
   
-  char input_text[] = "The C Driver\nIs Working!";
-
-  for (int index = 0; index < sizeof(input_text); index++) {
-    if (input_text[index] == '\n') {
-      write_4bits(LINE_2_HOME, NO_REG_RW);
-    } else if (input_text[index] != '\0') {
-      write_4bits((uint8_t)input_text[index], WRITE_CHAR);
-    }
-  }
-  
+  char input_1[] = "60nT";
+  char input_2[] = "65nT";
+  char input_3[] = "15nT";
+  char input_4[] = "-200nT";
 
   while ( true ) {
 
-    printf("is it working now?\n");
+    print_field_data(input_1, sizeof(input_1));
+    print_field_data(input_2, sizeof(input_2));
+    print_field_data(input_3, sizeof(input_3));
+    print_field_data(input_4, sizeof(input_4));
 
   }
 }
