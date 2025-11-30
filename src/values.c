@@ -12,8 +12,12 @@ const uint8_t LCD_DISPLAY_CONTROL = 0x0F;
 const uint8_t LCD_FUNCTION_SET = 0x28;
 
 // DDRAM ADDRESS
-const uint8_t RETURN_HOME = 0x80;
+const uint8_t LINE_1_HOME = 0x80;
+const uint8_t LINE_1_CHAR_16 = 0x8F;
+const uint8_t LINE_1_END = 0xA7;
 const uint8_t LINE_2_HOME = 0xC0;
+const uint8_t LINE_2_CHAR_16 = 0xCF;
+const uint8_t LINE_2_END = 0xE7;
 
 // 'Modes'
 const uint8_t WRITE_CHAR = 0x01;

@@ -23,11 +23,13 @@ void lcd_initialization() {
 }
 
 void lcd_print(char* input_text) {
-  for (int index = 0; index < 100; index++) {
-    if (input_text[index] == '\n') {
-      write_4bits(LINE_2_HOME, NO_REG_RW);
-    } else if (input_text[index] != '\0') {
+  for (int index = 0; index < 80; index++) {
+    if (input_text[index] != '\n' && input_text[input] != '\0') {
       write_4bits((uint8_t)input_text[index], WRITE_CHAR);
+
+    } else if (input_text[index] == '\n') {
+      write_4bits(LINE_2_HOME, NO_REG_RW);
+
     } else if (input_text[index] == '\0') {
       break;
     }
@@ -37,3 +39,6 @@ void lcd_print(char* input_text) {
 void lcd_clear() {
   write_4bits(LCD_CLEAR, NO_REG_RW);
 }
+
+// TODO: Want to write scrolling function when chars written go past
+// the 16 characters displayed by default
