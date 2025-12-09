@@ -24,7 +24,7 @@ void lcd_initialization() {
 
 void lcd_print(char* input_text) {
   for (int index = 0; index < 80; index++) {
-    if (input_text[index] != '\n' && input_text[input] != '\0') {
+    if (input_text[index] != '\n' && input_text[index] != '\0') {
       write_4bits((uint8_t)input_text[index], WRITE_CHAR);
 
     } else if (input_text[index] == '\n') {
@@ -36,8 +36,20 @@ void lcd_print(char* input_text) {
   }
 }
 
+void lcd_print_address(char* input_text, uint8_t ddram_address) {
+  write_4bits(ddram_address, NO_REG_RW);
+  lcd_print(input_text);
+}
+
 void lcd_clear() {
   write_4bits(LCD_CLEAR, NO_REG_RW);
+}
+
+void lcd_clear_range(uint8_t start, uint8_t end) {
+  for (uint8_t ddram_address = start; ddram_address < end; ddram_address++) {
+    write_4bits(ddram_address, NO_REG_RW);
+    write_4bits(0x20, WRITE_CHAR);
+  }
 }
 
 // TODO: Want to write scrolling function when chars written go past
