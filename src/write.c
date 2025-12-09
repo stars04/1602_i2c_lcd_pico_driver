@@ -32,4 +32,4 @@ void write_4bits(uint8_t byte, uint8_t mode) {
   i2c_write_byte(low_bits & ~LCD_ENABLE_PIN);
   sleep_ms(1);
 }
-
+  
