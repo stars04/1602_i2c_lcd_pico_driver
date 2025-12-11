@@ -35,19 +35,19 @@ int main(void) {
   while ( true ) {
 
     lcd_print_address(input_1, 0x89);
-    sleep_ms(350);
+    sleep_ms(450);
     lcd_clear_range(0x89, 0x8F);
     sleep_ms(100);
     lcd_print_address(input_2, 0x89);
-    sleep_ms(350);
+    sleep_ms(450);
     lcd_clear_range(0x89, 0x8F);
     sleep_ms(100);
     lcd_print_address(input_3, 0x89);
-    sleep_ms(350);
+    sleep_ms(450);
     lcd_clear_range(0x89, 0x8F);
     sleep_ms(100);
     lcd_print_address(input_4, 0x89);
-    sleep_ms(350);
+    sleep_ms(450);
     lcd_clear_range(0x89, 0x8F);
     sleep_ms(100);
 
