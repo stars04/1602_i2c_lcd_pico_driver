@@ -8,9 +8,7 @@
 
 
 static void i2c_write_byte(uint8_t byte) {
-#ifdef i2c_default
-  i2c_write_blocking(i2c_default, LCD_ADDR, &byte, 1, false);
-#endif
+  i2c_write_blocking(i2c0, LCD_ADDR, &byte, 1, false);
 }
 
 void write_4bits(uint8_t byte, uint8_t mode) {

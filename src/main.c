@@ -9,21 +9,27 @@
  * (along with testing for the direct use case I have in mind
  */
 
+const uint8_t GPIO_PIN_04 = 0x04;
+const uint8_t GPIO_PIN_05 = 0x05;
+
+
 int main(void) {
 
   stdio_init_all();
 
-  i2c_init(i2c_default, 100000);
+  i2c_init(i2c0, 100000);
+  //i2c_init(i2c1, 100000);
+  //i2c_set_slave_mode(i2c1, true, 0x55);
   //i2c initialization procedure documented in pico SDK documenation
-  gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
-  gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
-  gpio_pull_up(PICO_DEFAULT_I2C_SDA_PIN);
-  gpio_pull_up(PICO_DEFAULT_I2C_SCL_PIN);
+  gpio_set_function(GPIO_PIN_04, GPIO_FUNC_I2C);
+  gpio_set_function(GPIO_PIN_05, GPIO_FUNC_I2C);
+  gpio_pull_up(GPIO_PIN_04);
+  gpio_pull_up(GPIO_PIN_05);
   //Make the I2C pins available to picotool
-  bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN, PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
+  bi_decl(bi_2pins_with_func(GPIO_PIN_04, GPIO_PIN_05, GPIO_FUNC_I2C));
 
   lcd_initialization();
-  
+  char value[] = {PICO_DEFAULT_I2C_SDA_PIN,PICO_DEFAULT_I2C_SDA_PIN - 0x01,PICO_DEFAULT_I2C_SDA_PIN +0x01,'\0'}; 
   char str1[] = "B Field: \nSensor ONLINE";
   char input_1[] = "60nT";
   char input_2[] = "65nT";
@@ -46,10 +52,11 @@ int main(void) {
     sleep_ms(450);
     lcd_clear_range(0x89, 0x8F);
     sleep_ms(100);
-    lcd_print_address(input_4, 0x89);
+    lcd_print_address(value, 0x89);
     sleep_ms(450);
-    lcd_clear_range(0x89, 0x8F);
+    //lcd_clear_range(0x89, 0x8F);
     sleep_ms(100);
+
 
   }
 }
